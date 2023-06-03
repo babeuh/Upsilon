@@ -15,9 +15,14 @@ ListBookController::ListBookController(Responder * parentResponder):
   m_tableView(this, this, this),
   m_readBookController(this)
 {
-  m_txtFilesNumber = filesWithExtension(".txt", m_files, k_maxFilesNumber);
-  m_urtFilesNumber = filesWithExtension(".urt", m_files + m_txtFilesNumber, k_maxFilesNumber - m_txtFilesNumber);
-  cleanRemovedBookRecord();
+  if (!GlobalPreferences::sharedGlobalPreferences()->unlockedWithUSB()) {
+    m_txtFilesNumber = 0;
+    m_urtFilesNumber = 0;
+  } else {
+    m_txtFilesNumber = filesWithExtension(".txt", m_files, k_maxFilesNumber);
+    m_urtFilesNumber = filesWithExtension(".urt", m_files + m_txtFilesNumber, k_maxFilesNumber - m_txtFilesNumber);
+    cleanRemovedBookRecord();
+  }
 }
 
 int ListBookController::numberOfRows() const {
@@ -96,6 +101,9 @@ bool ListBookController::isEmpty() const {
 }
 
 I18n::Message ListBookController::emptyMessage() {
+  if (!GlobalPreferences::sharedGlobalPreferences()->unlockedWithUSB()) {
+    return I18n::Message::UnlockWithUSB;
+  }
   return I18n::Message::NoFileToDisplay;
 }
 

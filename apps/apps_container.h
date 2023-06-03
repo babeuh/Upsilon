@@ -53,6 +53,7 @@ public:
   void resetXNT() { m_XNTLoop.reset(); }
   OnBoarding::PromptController * promptController();
   void redrawWindow(bool force = false);
+  void hideTitleBar(bool hide);
   void activateExamMode(GlobalPreferences::ExamMode examMode);
   // Exam pop-up controller delegate
   void examDeactivatingPopUpIsDismissed() override;

@@ -30,7 +30,24 @@ void extapp_msleep(uint32_t ms) {
 }
 
 uint64_t extapp_scanKeyboard() {
-  return Ion::Keyboard::scan();
+  uint64_t keyboard_scan = Ion::Keyboard::scan();
+  bool suspend = (keyboard_scan == Ion::Keyboard::State(Ion::Keyboard::Key::EXE));
+  if (suspend && Ion::Backlight::isInitialized()) {
+    Ion::Backlight::shutdown();
+    Ion::Display::pushRectUniform(KDRect(0,0,320,240), KDColorBlack);
+    Ion::Timing::msleep(100);
+    return (uint64_t)Ion::Keyboard::Key::None;
+  } else if (suspend && !Ion::Backlight::isInitialized()) {
+    Ion::Backlight::init();
+    Ion::Backlight::setBrightness(GlobalPreferences::sharedGlobalPreferences()->brightnessLevel());
+    AppsContainer::sharedAppsContainer()->redrawWindow();
+    Ion::Timing::msleep(100);
+    return (uint64_t)Ion::Keyboard::Key::None;
+  } else if (!Ion::Backlight::isInitialized()) {
+    Ion::Timing::msleep(100);
+    return (uint64_t)Ion::Keyboard::Key::None;
+  }
+  return keyboard_scan;
 }
 
 void extapp_pushRect(int16_t x, int16_t y, uint16_t w, uint16_t h, const uint16_t * pixels) {

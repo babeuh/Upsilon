@@ -7,6 +7,7 @@
 #include <poincare/integer.h>
 #include <poincare/number.h>
 #include <ion/storage.h>
+#include <ion/src/device/shared/drivers/reset.h>
 
 #include <poincare/preferences.h>
 
@@ -58,14 +59,15 @@ bool AboutController::handleEvent(Ion::Events::Event event) {
         if (strcmp(currentText, Ion::patchLevel()) == 0) {
           myCell->setAccessoryText(Ion::pcbVersion());
         } else if (strcmp(currentText, Ion::pcbVersion()) == 0) {
-          myCell->setAccessoryText(Ion::softwareVersion());
+          myCell->setAccessoryText("20.4.0");
         } else {
           assert(strcmp(currentText, Ion::softwareVersion()) == 0);
           myCell->setAccessoryText(Ion::patchLevel());
         }
         return true;
       }
-      if (childLabel == I18n::Message::UpsilonVersion) {
+      // Remove Upsilon and Omega
+      /*if (childLabel == I18n::Message::UpsilonVersion) {
         MessageTableCellWithBuffer * myCell = (MessageTableCellWithBuffer *)m_selectableTableView.selectedCell();
         if (strcmp(myCell->accessoryText(), Ion::upsilonVersion()) == 0) {
           myCell->setAccessoryText(MP_STRINGIFY(OMEGA_STATE)); //Change for public/dev
@@ -82,7 +84,7 @@ bool AboutController::handleEvent(Ion::Events::Event event) {
         }
         myCell->setAccessoryText(Ion::omegaVersion());
         return true;
-      }
+      }*/
       if (childLabel == I18n::Message::MemUse) {
         MessageTableCellWithBuffer * myCell = (MessageTableCellWithBuffer *)m_selectableTableView.selectedCell();
         
@@ -207,9 +209,11 @@ void AboutController::willDisplayCellForIndex(HighlightCell * cell, int index) {
 
     static const char * messages[] = {
       (const char*) Ion::username(),
-      Ion::upsilonVersion(),
-      Ion::omegaVersion(),
-      Ion::softwareVersion(),
+      // Remove Upsilon and Omega
+      /*Ion::upsilonVersion(),
+      /Ion::omegaVersion(),*/
+      // Hardcode Epsilon Version
+      "20.4.0",
       mpVersion,
       batteryLevel,
       "",

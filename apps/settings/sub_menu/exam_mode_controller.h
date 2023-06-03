@@ -21,7 +21,7 @@ public:
   void willDisplayCellForIndex(HighlightCell * cell, int index) override;
 private:
   static constexpr int k_numberOfDeactivationMessageLines = 3;
-  static constexpr int k_numberOfCautionMessageLines = 3;
+  static constexpr int k_numberOfCautionMessageLines = 3; // DO NOT TOUCH THIS!
   int numberOfCautionLines() const;
   int initialSelectedRow() const override;
   GlobalPreferences::ExamMode examMode();

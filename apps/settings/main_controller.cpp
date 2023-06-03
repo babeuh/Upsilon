@@ -2,7 +2,7 @@
 #include "../global_preferences.h"
 #include <apps/i18n.h>
 #include <assert.h>
-#include <ion/backlight.h>
+#include <ion.h>
 
 using namespace Poincare;
 using namespace Shared;
@@ -28,7 +28,8 @@ constexpr SettingsMessageTree s_codeChildren[3] = {SettingsMessageTree(I18n::Mes
 #endif
 constexpr SettingsMessageTree s_modelFontChildren[2] = {SettingsMessageTree(I18n::Message::LargeFont), SettingsMessageTree(I18n::Message::SmallFont)};
 
-constexpr SettingsMessageTree s_modelAboutChildren[10] = {SettingsMessageTree(I18n::Message::Username), SettingsMessageTree(I18n::Message::UpsilonVersion), SettingsMessageTree(I18n::Message::OmegaVersion), SettingsMessageTree(I18n::Message::SoftwareVersion), SettingsMessageTree(I18n::Message::MicroPythonVersion), SettingsMessageTree(I18n::Message::Battery), SettingsMessageTree(I18n::Message::MemUse), SettingsMessageTree(I18n::Message::SerialNumber), SettingsMessageTree(I18n::Message::FccId), SettingsMessageTree(I18n::Message::Contributors, s_contributorsChildren)};
+// Remove Upsilon and Omega
+constexpr SettingsMessageTree s_modelAboutChildren[8] = {SettingsMessageTree(I18n::Message::Username), SettingsMessageTree(I18n::Message::SoftwareVersion), SettingsMessageTree(I18n::Message::MicroPythonVersion), SettingsMessageTree(I18n::Message::Battery), SettingsMessageTree(I18n::Message::MemUse), SettingsMessageTree(I18n::Message::SerialNumber), SettingsMessageTree(I18n::Message::FccId), SettingsMessageTree(I18n::Message::Contributors, s_contributorsChildren)};
 
 MainController::MainController(Responder * parentResponder, InputEventHandlerDelegate * inputEventHandlerDelegate) :
   ViewController(parentResponder),
@@ -81,6 +82,14 @@ bool MainController::handleEvent(Ion::Events::Event event) {
       return false;
     }
   }
+
+  if (model()->childAtIndex(selectedRow())->label() == I18n::Message::ResetCalculator) {
+    if (event == Ion::Events::OK || event == Ion::Events::EXE || event == Ion::Events::Right) {
+      Ion::Power::standby();
+      return true;
+    }
+  }
+
   if (event == Ion::Events::OK || event == Ion::Events::EXE || event == Ion::Events::Right) {
     GenericSubController * subController = nullptr;
     I18n::Message title = model()->childAtIndex(selectedRow())->label();
@@ -189,6 +198,12 @@ void MainController::willDisplayCellForIndex(HighlightCell * cell, int index) {
     MessageTableCellWithSwitch * mySwitchCell = (MessageTableCellWithSwitch *)cell;
     SwitchView * mySwitch = (SwitchView *)mySwitchCell->accessoryView();
     mySwitch->setState(globalPreferences->showPopUp());
+    return;
+  }
+  // Add ResetCalculator
+  if (model()->childAtIndex(index)->label() == I18n::Message::ResetCalculator) {
+    MessageTableCell<> * myCell = (MessageTableCell<> *)cell;
+    myCell->setMessage(I18n::Message::ResetCalculator);
     return;
   }
   MessageTableCellWithChevronAndMessage * myTextCell = (MessageTableCellWithChevronAndMessage *)cell;

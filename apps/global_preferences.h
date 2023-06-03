@@ -23,7 +23,7 @@ public:
   Poincare::Preferences::UnitFormat unitFormat() const { return I18n::CountryPreferencesArray[static_cast<uint8_t>(m_country)].unitFormat(); }
   CountryPreferences::HomeAppsLayout homeAppsLayout() const { return I18n::CountryPreferencesArray[static_cast<uint8_t>(m_country)].homeAppsLayout(); }
   bool isInExamMode() const { return (int8_t)examMode() > 0; }
-  bool isInExamModeSymbolic() const { return !((int8_t)examMode() > 1); }
+  bool isInExamModeSymbolic() const { return (int8_t)examMode() == 1; }
   ExamMode examMode() const;
   ExamMode tempExamMode() const;
   void setExamMode(ExamMode examMode);
@@ -51,6 +51,8 @@ public:
   void setExternalAppWritePermission(bool extapp_write) { m_externalAppWritePermission = extapp_write; }
   bool externalAppShown() const { return m_externalAppShown; }
   void setExternalAppShown(bool externalAppShown) { m_externalAppShown = externalAppShown; }
+  bool unlockedWithUSB() const { return m_unlockedWithUSB; }
+  void setUnlockedWithUSB(bool unlockedWithUSB) { m_unlockedWithUSB = unlockedWithUSB; }
 private:
   static_assert(I18n::NumberOfLanguages > 0, "I18n::NumberOfLanguages is not superior to 0"); // There should already have been an error when processing an empty EPSILON_I18N flag
   static_assert(I18n::NumberOfCountries > 0, "I18n::NumberOfCountries is not superior to 0"); // There should already have been an error when processing an empty EPSILON_COUNTRIES flag
@@ -68,7 +70,7 @@ private:
     m_idleBeforeDimmingSeconds(45),
     m_brightnessShortcut(4),
     m_externalAppWritePermission(false),
-    m_externalAppShown(true),
+    m_externalAppShown(false),
     m_font(KDFont::LargeFont) {}
   I18n::Language m_language;
   I18n::Country m_country;
@@ -86,6 +88,7 @@ private:
   int m_brightnessShortcut;
   bool m_externalAppWritePermission;
   bool m_externalAppShown;
+  bool m_unlockedWithUSB;
   const KDFont * m_font;
 };
 

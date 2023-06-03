@@ -1,5 +1,6 @@
 
 #include <ion.h>
+#include <ion/timing.h>
 #include <assert.h>
 
 #include <bootloader/boot.h>
@@ -49,12 +50,31 @@ __attribute__ ((noreturn)) void ion_main(int argc, const char * const argv[]) {
     }
   }
 
-  if (Bootloader::Recovery::hasCrashed()) {
-    Bootloader::Recovery::recoverData();
+  Ion::Timing::msleep(500);
+  uint64_t scan = Ion::Keyboard::scan();
+  if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Back)) {
+    if (Bootloader::Recovery::hasCrashed()) {
+      Bootloader::Recovery::recoverData();
+    }
+
+    Bootloader::Interface::drawLoading();
+
+    // Boot the firmware
+    Bootloader::Boot::boot();
+  } else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Right) && Bootloader::Slot::isFullyValid(Bootloader::Slot::B())) {
+    Bootloader::Slot::B().boot();
+  }  else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Left) && Bootloader::Slot::isFullyValid(Bootloader::Slot::Khi())) {
+    Bootloader::Slot::Khi().boot();
+  } else if (Bootloader::Slot::isFullyValid(Bootloader::Slot::A())) {
+    Bootloader::Slot::A().boot();
+  } else {
+    if (Bootloader::Recovery::hasCrashed()) {
+      Bootloader::Recovery::recoverData();
+    }
+
+    Bootloader::Interface::drawLoading();
+
+    // Boot the firmware
+    Bootloader::Boot::boot();
   }
-
-  Bootloader::Interface::drawLoading();
-
-  // Boot the firmware
-  Bootloader::Boot::boot();
 }

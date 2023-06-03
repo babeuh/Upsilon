@@ -17,6 +17,7 @@ ExamPopUpController::ExamPopUpController(ExamPopUpControllerDelegate * delegate)
         GlobalPreferences::sharedGlobalPreferences()->setExamMode(mode);
         AppsContainer * container = AppsContainer::sharedAppsContainer();
         if (mode == GlobalPreferences::ExamMode::Off) {
+          GlobalPreferences::sharedGlobalPreferences()->setExternalAppShown(true);
           Ion::LED::setColor(KDColorBlack);
           Ion::LED::updateColorWithPlugAndCharge();
         } else {

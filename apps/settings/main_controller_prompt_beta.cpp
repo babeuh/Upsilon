@@ -19,7 +19,8 @@ constexpr SettingsMessageTree s_modelMenu[] =
     SettingsMessageTree(I18n::Message::BetaPopUp),
     SettingsMessageTree(I18n::Message::ExternalApps, s_externalChildren),
     SettingsMessageTree(I18n::Message::Accessibility, s_accessibilityChildren),
-    SettingsMessageTree(I18n::Message::About, s_modelAboutChildren)};
+    SettingsMessageTree(I18n::Message::About, s_modelAboutChildren),
+    SettingsMessageTree(I18n::Message::ResetCalculator)};
 
 constexpr SettingsMessageTree s_model = SettingsMessageTree(I18n::Message::SettingsApp, s_modelMenu);
 

@@ -29,7 +29,7 @@ extern const Shared::SettingsMessageTree s_codeChildren[3];
 extern const Shared::SettingsMessageTree s_modelDateTimeChildren[3];
 extern const Shared::SettingsMessageTree s_accessibilityChildren[6];
 extern const Shared::SettingsMessageTree s_contributorsChildren[18];
-extern const Shared::SettingsMessageTree s_modelAboutChildren[10];
+extern const Shared::SettingsMessageTree s_modelAboutChildren[8];
 extern const Shared::SettingsMessageTree s_usbProtectionChildren[2];
 extern const Shared::SettingsMessageTree s_usbProtectionLevelChildren[3];
 extern const Shared::SettingsMessageTree s_externalChildren[2];

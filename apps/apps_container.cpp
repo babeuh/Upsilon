@@ -100,9 +100,17 @@ App::Snapshot * AppsContainer::usbConnectedAppSnapshot() {
 
 void AppsContainer::reset() {
   // Empty storage (delete functions, variables, python scripts)
-  Ion::Storage::sharedStorage()->destroyAllRecords();
+  Ion::Storage::sharedStorage()->destroyRecordsWithExtension("txt");
+  Ion::Storage::sharedStorage()->destroyRecordsWithExtension("urt");
+  Ion::Storage::sharedStorage()->destroyRecordsWithExtension("py");
+  Ion::Storage::sharedStorage()->destroyRecordsWithExtension("eq");
+  Ion::Storage::sharedStorage()->destroyRecordsWithExtension("exp");
+  Ion::Storage::sharedStorage()->destroyRecordsWithExtension("func");
+  Ion::Storage::sharedStorage()->destroyRecordsWithExtension("seq");
+  GlobalPreferences::sharedGlobalPreferences()->setUnlockedWithUSB(false);
   // Empty clipboard
   Clipboard::sharedClipboard()->reset();
+  // Clear apps
   for (int i = 0; i < numberOfApps(); i++) {
     appSnapshotAtIndex(i)->reset();
   }
@@ -142,6 +150,7 @@ bool AppsContainer::dispatchEvent(Ion::Events::Event event) {
 
   if (event == Ion::Events::USBEnumeration || event == Ion::Events::USBPlug || event == Ion::Events::BatteryCharging) {
     Ion::LED::updateColorWithPlugAndCharge();
+    GlobalPreferences::sharedGlobalPreferences()->setUnlockedWithUSB(true);
   }
   if (event == Ion::Events::USBEnumeration) {
     if (Ion::USB::isPlugged()) {
@@ -461,7 +470,7 @@ void AppsContainer::redrawWindow(bool force) {
 void AppsContainer::activateExamMode(GlobalPreferences::ExamMode examMode) {
   assert(examMode != GlobalPreferences::ExamMode::Off && examMode != GlobalPreferences::ExamMode::Unknown);
   reset();
-  Ion::LED::setColor(KDColorRed);
+  //Ion::LED::setColor(KDColorRed);
   /* The Dutch exam mode LED is supposed to be orange but we can only make
    * blink "pure" colors: with RGB leds on or off (as the PWM is used for
    * blinking). The closest "pure" color is Yellow. Moreover, Orange LED is
@@ -469,8 +478,10 @@ void AppsContainer::activateExamMode(GlobalPreferences::ExamMode examMode) {
    * that the yellow LED only means that Dutch exam mode is on and avoid
    * confusing states when the battery is charging and states when the Dutch
    * exam mode is on. */
-  // Ion::LED::setColor(examMode == GlobalPreferences::ExamMode::Dutch ? KDColorYellow : KDColorRed);
+  Ion::LED::setColor(examMode == GlobalPreferences::ExamMode::Dutch ? KDColorYellow : KDColorRed);
   Ion::LED::setBlinking(1000, 0.1f);
+  // Hide external apps
+  GlobalPreferences::sharedGlobalPreferences()->setExternalAppShown(false);
 }
 
 void AppsContainer::examDeactivatingPopUpIsDismissed() {
@@ -498,4 +509,8 @@ Window * AppsContainer::window() {
 void AppsContainer::resetShiftAlphaStatus() {
   Ion::Events::setShiftAlphaStatus(Ion::Events::ShiftAlphaStatus::Default);
   updateAlphaLock();
+}
+
+void AppsContainer::hideTitleBar(bool hide) {
+  m_window.hideTitleBarView(hide);
 }

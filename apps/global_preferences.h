@@ -70,7 +70,7 @@ private:
     m_idleBeforeDimmingSeconds(45),
     m_brightnessShortcut(4),
     m_externalAppWritePermission(false),
-    m_externalAppShown(false),
+    m_externalAppShown(true),
     m_font(KDFont::LargeFont) {}
   I18n::Language m_language;
   I18n::Country m_country;

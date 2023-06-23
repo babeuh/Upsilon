@@ -346,6 +346,9 @@ void AppsContainer::run() {
   Ion::Display::pushRectUniform(screenRect, KDColorWhite);
   if (GlobalPreferences::sharedGlobalPreferences()->isInExamMode()) {
     activateExamMode(GlobalPreferences::sharedGlobalPreferences()->examMode());
+    GlobalPreferences::sharedGlobalPreferences()->setExternalAppShown(false);
+  } else {
+    GlobalPreferences::sharedGlobalPreferences()->setExternalAppShown(true);
   }
   refreshPreferences();
 

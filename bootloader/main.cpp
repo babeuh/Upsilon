@@ -50,8 +50,9 @@ __attribute__ ((noreturn)) void ion_main(int argc, const char * const argv[]) {
     }
   }
 
-  Ion::Timing::msleep(500);
+  Ion::Timing::msleep(200);
   uint64_t scan = Ion::Keyboard::scan();
+  // Show bootloader
   if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Back)) {
     if (Bootloader::Recovery::hasCrashed()) {
       Bootloader::Recovery::recoverData();
@@ -61,12 +62,22 @@ __attribute__ ((noreturn)) void ion_main(int argc, const char * const argv[]) {
 
     // Boot the firmware
     Bootloader::Boot::boot();
-  } else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Right) && Bootloader::Slot::isFullyValid(Bootloader::Slot::B())) {
+  // Launch Slot A
+  } else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Up) && Bootloader::Slot::isFullyValid(Bootloader::Slot::A())) {
+    Bootloader::Slot::A().boot();
+  // Launch Slot B
+  } else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Down) && Bootloader::Slot::isFullyValid(Bootloader::Slot::B())) {
     Bootloader::Slot::B().boot();
+  // Launch Khi
   }  else if (scan == Ion::Keyboard::State(Ion::Keyboard::Key::Left) && Bootloader::Slot::isFullyValid(Bootloader::Slot::Khi())) {
     Bootloader::Slot::Khi().boot();
+  // Default Slot
+  } else if (Bootloader::Slot::isFullyValid(Bootloader::Slot::B())) {
+    Bootloader::Slot::B().boot();
+  // Boot Slot A if Slot B is not valid
   } else if (Bootloader::Slot::isFullyValid(Bootloader::Slot::A())) {
     Bootloader::Slot::A().boot();
+  // Boot bootloader if nothing is valid
   } else {
     if (Bootloader::Recovery::hasCrashed()) {
       Bootloader::Recovery::recoverData();

@@ -513,7 +513,3 @@ void AppsContainer::resetShiftAlphaStatus() {
   Ion::Events::setShiftAlphaStatus(Ion::Events::ShiftAlphaStatus::Default);
   updateAlphaLock();
 }
-
-void AppsContainer::hideTitleBar(bool hide) {
-  m_window.hideTitleBarView(hide);
-}

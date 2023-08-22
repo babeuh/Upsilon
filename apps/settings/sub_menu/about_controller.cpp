@@ -211,7 +211,7 @@ void AboutController::willDisplayCellForIndex(HighlightCell * cell, int index) {
       (const char*) Ion::username(),
       // Remove Upsilon and Omega
       /*Ion::upsilonVersion(),
-      /Ion::omegaVersion(),*/
+      Ion::omegaVersion(),*/
       // Hardcode Epsilon Version
       "20.4.0",
       mpVersion,

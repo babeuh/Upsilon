@@ -24,7 +24,7 @@
           python310Packages.lz4
           python310Packages.pypng
           imagemagick
-          gcc-arm-embedded
+          gcc-arm-embedded-9
           gcc
         ];
       };

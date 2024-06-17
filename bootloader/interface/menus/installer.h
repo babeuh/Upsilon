@@ -13,6 +13,8 @@ namespace Bootloader {
       void postOpen() override {};
 
       static DfuMenu * SlotsDFU();
+      static DfuMenu * SlotADFU();
+      static DfuMenu * SlotBDFU();
       static DfuMenu * BootloaderDFU();
   };
 }

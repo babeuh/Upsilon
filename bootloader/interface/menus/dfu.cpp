@@ -14,7 +14,7 @@ void Bootloader::DfuMenu::setup() {
 
 void Bootloader::DfuMenu::postOpen() {
   // We override the open method
-  if (!m_data->getData().isProtectedInternal() && m_data->getData().isProtectedExternal()) {
+  if (!m_data->getData().isProtectedInternal() && m_data->getData().isProtectedExternalBoth()) {
     // Because we want to flash the internal, we will jump into the stm32 bootloader
     Bootloader::Boot::jumpToInternalBootloader();
     return; // We never reach this point

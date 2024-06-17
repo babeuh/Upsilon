@@ -216,7 +216,9 @@ void DFUInterface::eraseMemoryIfNeeded() {
   // More simple to read
   if ((0x08000000 <= m_eraseAddress && m_eraseAddress <= 0x08010000)&& !m_dfuData.isProtectedInternal()) {
     Flash::EraseSector(m_erasePage);
-  } else if ((0x90000000 <= m_eraseAddress && m_eraseAddress <= 0x90800000)&& !m_dfuData.isProtectedExternal()) {
+  } else if ((0x90000000 <= m_eraseAddress && m_eraseAddress <= 0x90400000)&& !m_dfuData.isProtectedExternalA()) {
+    Flash::EraseSector(m_erasePage);
+  } else if ((0x90400000 <= m_eraseAddress && m_eraseAddress <= 0x90800000)&& !m_dfuData.isProtectedExternalB()) {
     Flash::EraseSector(m_erasePage);
   }
   /* Put an out of range value in m_erasePage to indicate that no erase is
@@ -237,7 +239,9 @@ void DFUInterface::writeOnMemory() {
 
     if (m_writeAddress >= 0x08000000 && m_writeAddress <= 0x08010000 && !m_dfuData.isProtectedInternal()) {
       Flash::WriteMemory(reinterpret_cast<uint8_t *>(m_writeAddress), m_largeBuffer, m_largeBufferLength);
-    } else if (m_writeAddress >= 0x90000000 && m_writeAddress <= 0x90800000 && !m_dfuData.isProtectedExternal()) {
+    } else if ((0x90000000 <= m_eraseAddress && m_eraseAddress <= 0x90400000)&& !m_dfuData.isProtectedExternalA()) {
+      Flash::WriteMemory(reinterpret_cast<uint8_t *>(m_writeAddress), m_largeBuffer, m_largeBufferLength);
+    } else if ((0x90400000 <= m_eraseAddress && m_eraseAddress <= 0x90800000)&& !m_dfuData.isProtectedExternalB()) {
       Flash::WriteMemory(reinterpret_cast<uint8_t *>(m_writeAddress), m_largeBuffer, m_largeBufferLength);
     }
 
@@ -293,7 +297,7 @@ void DFUInterface::leaveDFUAndReset() {
 }
 
 void DFUInterface::copyDfuData() {
-  m_dfuData = Bootloader::ProtectionState(!m_dfuConfig.isProtectedInternal(), !m_dfuConfig.isProtectedExternal());
+  m_dfuData = Bootloader::ProtectionState(!m_dfuConfig.isProtectedInternal(), !m_dfuConfig.isProtectedExternalA(), !m_dfuConfig.isProtectedExternalB());
 }
 
 }

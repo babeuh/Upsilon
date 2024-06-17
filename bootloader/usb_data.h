@@ -8,14 +8,19 @@ namespace Bootloader {
 
 class ProtectionState {
   public:
-    ProtectionState(bool unlockInternal = false, bool unlockExternal = true) : m_protectInternal(!unlockInternal), m_protectExternal(!unlockExternal) {};
+    ProtectionState(bool unlockInternal = false, bool unlockExternalA = true, bool unlockExternalB = true) : m_protectInternal(!unlockInternal), m_protectExternalA(!unlockExternalA), m_protectExternalB(!unlockExternalB) {};
 
     bool isProtectedInternal() const { return m_protectInternal; }
-    bool isProtectedExternal() const { return m_protectExternal; }
+    bool isProtectedExternalBoth() const { return m_protectExternalA && m_protectExternalB; }
+    bool isProtectedExternalA() const { return m_protectExternalA; }
+    bool isProtectedExternalB() const { return m_protectExternalB; }
+
 
   private:
     bool m_protectInternal;
-    bool m_protectExternal;
+    bool m_protectExternalBoth;
+    bool m_protectExternalA;
+    bool m_protectExternalB;
 };
 
 class USBData {
@@ -42,6 +47,8 @@ class USBData {
     static const char * buildStringDescriptor(StringHeader header, uint32_t startAddress, uint32_t size);
 
     static const USBData DEFAULT();
+    static const USBData SLOTA();
+    static const USBData SLOTB();
     static const USBData BOOTLOADER_UPDATE();
     static USBData Recovery(uint32_t startAddress, uint32_t size);
 

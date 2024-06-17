@@ -30,13 +30,18 @@ public:
 
   constexpr static const char * dfuSlotsUpdate = "Waiting for Slots...";
   constexpr static const char * dfuBootloaderUpdate = "Waiting for Bootloader...";
+  constexpr static const char * dfuSlotAUpdate = "Waiting for Slot A...";
+  constexpr static const char * dfuSlotBUpdate = "Waiting for Slot B...";
 
   // Installer menu
   constexpr static const char * installerTitle = "Installer mode";
 
   constexpr static const char * installerText1 = "Please select a mode:";
-  constexpr static const char * installerSlotsSubmenu = "1 - Flash Slots";
+  constexpr static const char * installerSlotsSubmenu = "1 - Flash Any Slots";
   constexpr static const char * installerBootloaderSubmenu = "2 - Flash Bootloader";
+  constexpr static const char * installerSlotASubmenu = "7 - Flash Slot A";
+  constexpr static const char * installerSlotBSubmenu = "8 - Flash Slot B";
+
 
   // Bootloader Crash Handler
   constexpr static const char * bootloaderCrashTitle = "BOOTLOADER CRASH";

@@ -27,13 +27,21 @@ const char * Bootloader::USBData::buildStringDescriptor(StringHeader header, uin
 }
 
 const Bootloader::USBData Bootloader::USBData::DEFAULT() {
-    return USBData("@Flash/0x90000000/08*004Kg,01*032Kg,63*064Kg,64*064Kg", Messages::usbUpsilonBootloader, ProtectionState(false, true));
+    return USBData("@Flash/0x90000000/08*004Kg,01*032Kg,63*064Kg,64*064Kg", Messages::usbUpsilonBootloader, ProtectionState(false, true, true));
+}
+
+const Bootloader::USBData Bootloader::USBData::SLOTA() {
+    return USBData("@Flash/0x90000000/08*004Kg,01*032Kg,63*064Kg", Messages::usbUpsilonBootloader, ProtectionState(false, true, false));
+}
+
+const Bootloader::USBData Bootloader::USBData::SLOTB() {
+    return USBData("@Flash/0x90400000/64*064Kg", Messages::usbUpsilonBootloader, ProtectionState(false, false, true));
 }
 
 const Bootloader::USBData Bootloader::USBData::BOOTLOADER_UPDATE() {
-    return USBData("@Flash/0x08000000/04*016Kg", Messages::usbBootloaderUpdate, ProtectionState(true, false));
+    return USBData("@Flash/0x08000000/04*016Kg", Messages::usbBootloaderUpdate, ProtectionState(true, false, false));
 }
 
 Bootloader::USBData Bootloader::USBData::Recovery(uint32_t startAddress, uint32_t size) {
-    return USBData(buildStringDescriptor(StringHeader::SRAM(), startAddress, size), Messages::usbUpsilonRecovery, ProtectionState(false, false));
+    return USBData(buildStringDescriptor(StringHeader::SRAM(), startAddress, size), Messages::usbUpsilonRecovery, ProtectionState(false, false, false));
 }

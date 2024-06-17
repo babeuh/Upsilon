@@ -38,10 +38,8 @@ void Boot::setMode(BootMode mode) {
 
 void Boot::busError() {
   Ion::Device::Flash::ClearInternalFlashErrors();
-  asm("mov r12, lr");
   if (config()->isBooting()) { // Bus error is normal if we are booting, it's triggered when we lock OPTCR
-    asm("mov lr, r12");
-    asm("bx lr");
+    return;
   }
   Bootloader::Recovery::crash_handler("BusFault");
 }
@@ -87,14 +85,14 @@ void Boot::patchKernel(const Slot & s) {
   // data[origin_isr + sizeof(uint32_t) * 5 + 1] = ptr[1];
   // data[origin_isr + sizeof(uint32_t) * 5 + 2] = ptr[2];
   // data[origin_isr + sizeof(uint32_t) * 5 + 3] = ptr[3];
-  
+
   data[origin_isr + sizeof(uint32_t) * 7] = ptr[0]; // UsageFault
   data[origin_isr + sizeof(uint32_t) * 7 + 1] = ptr[1];
   data[origin_isr + sizeof(uint32_t) * 7 + 2] = ptr[2];
   data[origin_isr + sizeof(uint32_t) * 7 + 3] = ptr[3];
 
   // data[origin_isr + sizeof(uint32_t) * 4] = ptr[0];//hardfault
-  // data[origin_isr + sizeof(uint32_t) * 4 + 1] = ptr[1]; 
+  // data[origin_isr + sizeof(uint32_t) * 4 + 1] = ptr[1];
   // data[origin_isr + sizeof(uint32_t) * 4 + 2] = ptr[2];
   // data[origin_isr + sizeof(uint32_t) * 4 + 3] = ptr[3];
 
@@ -107,7 +105,7 @@ void Boot::bootSlot(Bootloader::Slot s) {
   if (!s.userlandHeader()->isOmega() && !s.userlandHeader()->isUpsilon()) {
     // We are trying to boot epsilon, so we check the version and show an advertisement if needed
     const char * version = s.userlandHeader()->version();
-    const char * min = "21.3.1";
+    const char * min = "23.1.1";
     int versionSum = Utility::versionSum(version, strlen(version));
     int minimalVersionTrigger = Utility::versionSum(min, strlen(min));
     if (versionSum >= minimalVersionTrigger) {
